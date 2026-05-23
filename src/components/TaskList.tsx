@@ -1,32 +1,44 @@
 import React, { useMemo } from 'react';
 import { SectionList, StyleSheet, View, Text } from 'react-native';
-import TaskItem from './TaskItem';
-import { TaskItem as TaskType } from '../utils/handle-api';
+import TaskItem from '@/components/TaskItem';
+import { TaskItem as TaskType } from '@/utils/handle-api';
+import { useTaskStore } from '@/store/useTaskStore';
 
-// TODO (Zustand): Remova as props tasks, onUpdate e onDelete daqui, elas não serão mais necessárias
 interface TaskListProps {
-  tasks: TaskType[];
+  filter: 'all' | 'completed' | 'pending';
   onUpdate: (task: TaskType) => void;
-  onDelete: (id: string) => void;
 }
 
-// TODO (Zustand): Importe o useTaskStore e pegue as tasks diretamente da store
-const TaskList: React.FC<TaskListProps> = ({ tasks, onUpdate, onDelete }) => {
+const TaskList: React.FC<TaskListProps> = ({ filter, onUpdate }) => {
+  const tasks = useTaskStore((state) => state.tasks);
+
+  const filteredTasks = useMemo(() => {
+    if (!Array.isArray(tasks)) {
+      console.error("tasks is not an array:", tasks);
+      return [];
+    }
+    return tasks.filter(t => {
+      if (filter === 'completed') return t.completed;
+      if (filter === 'pending') return !t.completed;
+      return true;
+    });
+  }, [tasks, filter]);
+
   const sections = useMemo(() => {
-    const completedTasks = tasks.filter((task) => task.completed);
-    const pendingTasks = tasks.filter((task) => !task.completed);
+    const completedTasks = filteredTasks.filter((task) => task.completed);
+    const pendingTasks = filteredTasks.filter((task) => !task.completed);
 
     return [
       { title: '✅ Concluídas', data: completedTasks },
       { title: '📋 Pendentes', data: pendingTasks },
     ];
-  }, [tasks]);
+  }, [filteredTasks]);
 
   return (
     <View style={styles.listContainer}>
       <SectionList
         sections={sections}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => String(item._id)}
         contentContainerStyle={styles.listContent}
         renderSectionHeader={({ section: { title } }) => (
           <Text style={styles.sectionHeader}>{title}</Text>
@@ -36,7 +48,6 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onUpdate, onDelete }) => {
           <TaskItem
             task={item}
             updateMode={() => onUpdate(item)}
-            deleteTask={() => onDelete(item._id)}
           />
         )}
         renderSectionFooter={({ section }) => 

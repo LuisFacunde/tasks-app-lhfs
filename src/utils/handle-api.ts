@@ -1,19 +1,24 @@
 import axios from 'axios';
-import React from 'react';
 
 const baseURL = process.env.EXPO_PUBLIC_API_URL;
 
 export interface TaskItem {
-  _id: string;
+  _id: string | number;
   text: string;
   completed?: boolean;
   dueDate?: string;
+  priority?: 'Baixa' | 'Média' | 'Alta';
 }
 
-export const getAllTasks = (setTasks: React.Dispatch<React.SetStateAction<TaskItem[]>>, setLoading?: React.Dispatch<React.SetStateAction<boolean>>) => {
+export const getAllTasks = (setTasks: (tasks: TaskItem[]) => void, setLoading?: (loading: boolean) => void) => {
   if (setLoading) setLoading(true);
   axios.get<TaskItem[]>(`${baseURL}`).then(({ data }) => {
-    setTasks(data);
+    if (Array.isArray(data)) {
+      setTasks(data);
+    } else {
+      console.error("API response is not a valid array of tasks:", data);
+      setTasks([]);
+    }
     if (setLoading) setLoading(false);
   }).catch((err) => {
     console.log(err);
@@ -25,7 +30,7 @@ export const addTask = (
   text: string,
   completed: boolean,
   dueDate: string | null,
-  setTasks: React.Dispatch<React.SetStateAction<TaskItem[]>>,
+  setTasks: (tasks: TaskItem[]) => void,
   onSuccess: () => void
 ) => {
   axios
@@ -42,7 +47,7 @@ export const updateTask = (
   text: string,
   completed: boolean,
   dueDate: string | null,
-  setTasks: React.Dispatch<React.SetStateAction<TaskItem[]>>,
+  setTasks: (tasks: TaskItem[]) => void,
   onSuccess: () => void
 ) => {
   axios
@@ -56,7 +61,7 @@ export const updateTask = (
 
 export const deleteTask = (
   _id: string,
-  setTasks: React.Dispatch<React.SetStateAction<TaskItem[]>>
+  setTasks: (tasks: TaskItem[]) => void
 ) => {
   axios
     .post(`${baseURL}/delete`, { _id })

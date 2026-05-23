@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { globalStyles } from '../styles/global';
+import { globalStyles } from '@/styles/global';
 
 interface AboutScreenProps {
   onClose: () => void;
