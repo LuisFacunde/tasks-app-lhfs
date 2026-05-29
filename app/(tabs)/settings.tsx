@@ -42,14 +42,12 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        {/* Banner */}
         <View style={styles.bannerContainer}>
           <Image source={require('../../assets/task-app-banner.png')} style={styles.logo} />
           <Text style={styles.appName}>Gerenciador de Tarefas</Text>
           <Text style={styles.appVersion}>Versão 1.0.0</Text>
         </View>
 
-        {/* Estatísticas */}
         <Text style={styles.sectionTitle}>Suas Estatísticas</Text>
         <View style={styles.statsRow}>
           <View style={[styles.statCard, { borderColor: '#4caf50' }]}>
@@ -68,7 +66,6 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        {/* Preferências */}
         <Text style={styles.sectionTitle}>Preferências</Text>
         <View style={styles.card}>
           <View style={styles.settingRow}>
@@ -85,7 +82,6 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        {/* Sobre */}
         <Text style={styles.sectionTitle}>Sobre o App</Text>
         <View style={styles.card}>
           <Text style={styles.aboutText}>
@@ -103,7 +99,6 @@ export default function SettingsScreen() {
           ))}
         </View>
 
-        {/* Zona de perigo */}
         <Text style={styles.sectionTitle}>Zona de Perigo</Text>
         <View style={styles.card}>
           <SettingRow

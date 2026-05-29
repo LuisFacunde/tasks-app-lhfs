@@ -11,11 +11,9 @@ import { useTaskStore } from '@/store/useTaskStore';
 import TaskFormModal from '@/components/TaskFormModal';
 
 export default function TasksScreen() {
-  // Store selectors
   const loading = useTaskStore((state) => state.loading);
   const tasks = useTaskStore((state) => state.tasks);
 
-  // UI states
   const [filter, setFilter] = useState<'all' | 'completed' | 'pending'>('all');
   const [modalVisible, setModalVisible] = useState(false);
   const [editingTask, setEditingTask] = useState<TaskItem | null>(null);

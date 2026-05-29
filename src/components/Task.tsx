@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   todo: {
     backgroundColor: '#000',
     paddingVertical: 24,
-    paddingHorizontal: 32, // Adjusted from rem
+    paddingHorizontal: 32,
     borderRadius: 5,
     marginTop: 16,
     flexDirection: 'row',

@@ -10,12 +10,10 @@ import AboutScreen from './src/components/AboutScreen';
 import { useTaskStore } from './src/store/useTaskStore';
 
 export default function App() {
-  // Store selectors
   const tasks = useTaskStore((state) => state.tasks);
   const loading = useTaskStore((state) => state.loading);
   const setLoading = useTaskStore((state) => state.setLoading);
   
-  // UI states only
   const [text, setText] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [taskId, setTaskId] = useState("");

@@ -3,12 +3,15 @@ import {
   Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Platform,
 } from 'react-native';
 import Checkbox from 'expo-checkbox';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { TaskItem } from '@/utils/handle-api';
+
+const DateTimePicker = Platform.OS !== 'web'
+  ? require('@react-native-community/datetimepicker').default
+  : null;
 
 interface TaskFormModalProps {
   visible: boolean;
-  task: TaskItem | null; // null = criar nova tarefa
+  task: TaskItem | null;
   onClose: () => void;
   onSave: (
     text: string,
@@ -25,7 +28,6 @@ export default function TaskFormModal({ visible, task, onClose, onSave }: TaskFo
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [priority, setPriority] = useState<'Baixa' | 'Média' | 'Alta'>('Baixa');
 
-  // Sincroniza os campos com a tarefa sendo editada sempre que o modal abre
   React.useEffect(() => {
     if (visible) {
       if (task) {
@@ -66,7 +68,6 @@ export default function TaskFormModal({ visible, task, onClose, onSave }: TaskFo
             onChangeText={setText}
           />
 
-          {/* Data limite */}
           <View style={styles.fieldRow}>
             <Text style={styles.fieldLabel}>Data limite:</Text>
             {Platform.OS === 'web' ? (
@@ -102,7 +103,6 @@ export default function TaskFormModal({ visible, task, onClose, onSave }: TaskFo
             )}
           </View>
 
-          {/* Concluída */}
           <View style={styles.fieldRow}>
             <Text style={styles.fieldLabel}>Concluída:</Text>
             <View style={styles.checkboxContainer}>
@@ -114,7 +114,6 @@ export default function TaskFormModal({ visible, task, onClose, onSave }: TaskFo
             </View>
           </View>
 
-          {/* Prioridade */}
           <View style={styles.fieldRow}>
             <Text style={styles.fieldLabel}>Prioridade:</Text>
             <View style={styles.priorityContainer}>
@@ -138,7 +137,6 @@ export default function TaskFormModal({ visible, task, onClose, onSave }: TaskFo
             </View>
           </View>
 
-          {/* Ações do modal */}
           <View style={styles.modalActions}>
             <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
               <Text style={styles.cancelText}>Cancelar</Text>

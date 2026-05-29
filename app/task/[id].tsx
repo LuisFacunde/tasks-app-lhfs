@@ -79,12 +79,10 @@ export default function TaskDetailScreen() {
 
   return (
     <>
-      {/* Customiza o header dinamicamente com o título da tarefa */}
       <Stack.Screen options={{ title: task.text.length > 24 ? task.text.slice(0, 24) + '…' : task.text }} />
 
       <SafeAreaView style={styles.safeArea} edges={['bottom']}>
         <ScrollView contentContainerStyle={styles.content}>
-          {/* Card principal */}
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <View style={[styles.priorityBadge, { backgroundColor: priorityColor }]}>
@@ -129,7 +127,6 @@ export default function TaskDetailScreen() {
             </View>
           </View>
 
-          {/* Ações */}
           <Text style={styles.sectionTitle}>Ações</Text>
 
           <TouchableOpacity
