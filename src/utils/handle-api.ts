@@ -17,6 +17,18 @@ axios.interceptors.request.use(
   }
 );
 
+// Adiciona interceptor de resposta para fazer logout se o token for inválido ou expirado (401 ou 403)
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      console.log('Token expirado ou inválido. Realizando logout automático...');
+      useAuthStore.getState().logout();
+    }
+    return Promise.reject(error);
+  }
+);
+
 export interface TaskItem {
   _id: string | number;
   text: string;
