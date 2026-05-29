@@ -3,7 +3,6 @@ import { useAuthStore } from '../store/useAuthStore';
 
 const baseURL = process.env.EXPO_PUBLIC_API_URL;
 
-// Adiciona interceptor de requisição para injetar automaticamente o token JWT
 axios.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().token;
@@ -17,7 +16,6 @@ axios.interceptors.request.use(
   }
 );
 
-// Adiciona interceptor de resposta para fazer logout se o token for inválido ou expirado (401 ou 403)
 axios.interceptors.response.use(
   (response) => response,
   (error) => {

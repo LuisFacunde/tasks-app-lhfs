@@ -35,7 +35,7 @@ export const useAuthStore = create<AuthState>()(
           );
           const { token, user } = response.data;
           set({ token, user, loading: false });
-          return null; // Retorna null indicando sucesso
+          return null;
         } catch (error: any) {
           set({ loading: false });
           console.error('Erro de login:', error?.response?.data || error.message);
@@ -52,7 +52,7 @@ export const useAuthStore = create<AuthState>()(
           );
           const { token, user } = response.data;
           set({ token, user, loading: false });
-          return null; // Retorna null indicando sucesso
+          return null;
         } catch (error: any) {
           set({ loading: false });
           console.error('Erro de cadastro:', error?.response?.data || error.message);

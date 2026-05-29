@@ -12,12 +12,10 @@ function RootLayoutNav() {
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    // Escuta o término da hidratação do Zustand do AsyncStorage
     const unsubFinishHydration = useAuthStore.persist.onFinishHydration(() => {
       setIsHydrated(true);
     });
     
-    // Verifica se já está hidratado
     if (useAuthStore.persist.hasHydrated()) {
       setIsHydrated(true);
     }
@@ -30,14 +28,11 @@ function RootLayoutNav() {
   useEffect(() => {
     if (!isHydrated) return;
 
-    // Identifica se estamos em uma rota protegida (dentro de tabs ou detalhes de tarefas)
     const inAuthGroup = segments[0] === '(tabs)' || segments[0] === 'task';
 
     if (!token && inAuthGroup) {
-      // Sem token nas rotas protegidas -> redireciona para login
       router.replace('/login');
     } else if (token && !inAuthGroup) {
-      // Com token nas rotas de auth -> redireciona para tarefas
       router.replace('/(tabs)');
     }
   }, [token, segments, isHydrated]);
