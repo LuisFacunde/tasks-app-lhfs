@@ -1,13 +1,21 @@
-import { ScrollView, View, Text, StyleSheet, Switch, TouchableOpacity, Image, Linking, Platform, StatusBar as RNStatusBar } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Switch, TouchableOpacity, Image, Linking, Platform, StatusBar as RNStatusBar, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
 import { globalStyles } from '@/styles/global';
 import { useTaskStore } from '@/store/useTaskStore';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function SettingsScreen() {
   const tasks = useTaskStore((state) => state.tasks);
   const deleteAllTasks = useTaskStore((state) => state.deleteAllTasks);
+  const logout = useAuthStore((state) => state.logout);
+  const user = useAuthStore((state) => state.user);
+
+  const handleLogout = () => {
+    deleteAllTasks();
+    logout();
+  };
   const completedCount = Array.isArray(tasks) ? tasks.filter((t) => t.completed).length : 0;
   const pendingCount = Array.isArray(tasks) ? tasks.filter((t) => !t.completed).length : 0;
 
@@ -46,6 +54,9 @@ export default function SettingsScreen() {
           <Image source={require('../../assets/task-app-banner.png')} style={styles.logo} />
           <Text style={styles.appName}>Gerenciador de Tarefas</Text>
           <Text style={styles.appVersion}>Versão 1.0.0</Text>
+          {user && (
+            <Text style={styles.userEmail}>Conectado como: {user.email}</Text>
+          )}
         </View>
 
         <Text style={styles.sectionTitle}>Suas Estatísticas</Text>
@@ -99,6 +110,25 @@ export default function SettingsScreen() {
           ))}
         </View>
 
+        <Text style={styles.sectionTitle}>Sessão</Text>
+        <View style={styles.card}>
+          <SettingRow
+            icon="log-out"
+            label="Sair da Conta"
+            onPress={() => {
+              Alert.alert(
+                'Sair',
+                'Tem certeza que deseja sair da sua conta?',
+                [
+                  { text: 'Cancelar', style: 'cancel' },
+                  { text: 'Sair', style: 'destructive', onPress: handleLogout }
+                ]
+              );
+            }}
+            danger
+          />
+        </View>
+
         <Text style={styles.sectionTitle}>Zona de Perigo</Text>
         <View style={styles.card}>
           <SettingRow
@@ -147,6 +177,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#999',
     marginTop: 4,
+  },
+  userEmail: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 8,
+    fontWeight: '500',
+    backgroundColor: '#eee',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
   sectionTitle: {
     fontSize: 13,

@@ -1,6 +1,21 @@
 import axios from 'axios';
+import { useAuthStore } from '../store/useAuthStore';
 
 const baseURL = process.env.EXPO_PUBLIC_API_URL;
+
+// Adiciona interceptor de requisição para injetar automaticamente o token JWT
+axios.interceptors.request.use(
+  (config) => {
+    const token = useAuthStore.getState().token;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export interface TaskItem {
   _id: string | number;

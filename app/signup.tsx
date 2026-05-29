@@ -8,15 +8,19 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function SignupScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+
+  const signup = useAuthStore((state) => state.signup);
+  const loading = useAuthStore((state) => state.loading);
+  const router = useRouter();
 
   const handleSignup = async () => {
     if (!name || !email || !password || !confirmPassword) {
@@ -34,15 +38,12 @@ export default function SignupScreen() {
       return;
     }
 
-    setLoading(true);
-    try {
-      // TODO: Implementar lógica de cadastro com a API
-      console.log('Cadastro com:', { name, email, password });
-      Alert.alert('Sucesso', 'Conta criada com sucesso!');
-    } catch (error) {
-      Alert.alert('Erro', 'Falha ao criar conta');
-    } finally {
-      setLoading(false);
+    const error = await signup(email.trim(), password);
+    if (error) {
+      Alert.alert('Erro', error);
+    } else {
+      Alert.alert('Sucesso', 'Conta criada e login realizado com sucesso!');
+      router.replace('/(tabs)');
     }
   };
 

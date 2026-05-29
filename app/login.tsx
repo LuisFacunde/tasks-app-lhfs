@@ -7,13 +7,17 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  
+  const login = useAuthStore((state) => state.login);
+  const loading = useAuthStore((state) => state.loading);
+  const router = useRouter();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -21,15 +25,12 @@ export default function LoginScreen() {
       return;
     }
 
-    setLoading(true);
-    try {
-      // TODO: Implementar lógica de login com a API
-      console.log('Login com:', { email, password });
+    const error = await login(email.trim(), password);
+    if (error) {
+      Alert.alert('Erro', error);
+    } else {
       Alert.alert('Sucesso', 'Login realizado com sucesso!');
-    } catch (error) {
-      Alert.alert('Erro', 'Falha ao fazer login');
-    } finally {
-      setLoading(false);
+      router.replace('/(tabs)');
     }
   };
 
